@@ -82,6 +82,7 @@ func BenchmarkSmall(b *testing.B) {
 	benchmarkRequest(b, "EncodeCheatBufferE    ", RequestEncodeReservedBuffer(128, true), s.URL, o)
 	benchmarkRequest(b, "EncodePipe            ", RequestEncodePipe(false), s.URL, o)
 	benchmarkRequest(b, "EncodePipeE           ", RequestEncodePipe(true), s.URL, o)
+	benchmarkRequest(b, "EncodeBPipe           ", RequestEncodeBPipe, s.URL, o)
 }
 
 func BenchmarkMiddle(b *testing.B) {
@@ -105,6 +106,7 @@ func BenchmarkMiddle(b *testing.B) {
 	benchmarkRequest(b, "EncodeCheatBufferE   ", RequestEncodeReservedBuffer(32*1024, true), s.URL, o)
 	benchmarkRequest(b, "EncodePipe           ", RequestEncodePipe(false), s.URL, o)
 	benchmarkRequest(b, "EncodePipeE          ", RequestEncodePipe(true), s.URL, o)
+	benchmarkRequest(b, "EncodeBPipe          ", RequestEncodeBPipe, s.URL, o)
 }
 
 func BenchmarkLarge(b *testing.B) {
@@ -128,6 +130,7 @@ func BenchmarkLarge(b *testing.B) {
 	benchmarkRequest(b, "EncodeCheatBufferE    ", RequestEncodeReservedBuffer(31*1024*1024, true), s.URL, o)
 	benchmarkRequest(b, "EncodePipe            ", RequestEncodePipe(false), s.URL, o)
 	benchmarkRequest(b, "EncodePipeE           ", RequestEncodePipe(true), s.URL, o)
+	benchmarkRequest(b, "EncodeBPipe           ", RequestEncodeBPipe, s.URL, o)
 }
 
 func BenchmarkSimple(b *testing.B) {
@@ -157,6 +160,8 @@ func BenchmarkSimple(b *testing.B) {
 	benchmarkRequest(b, "EncodeCheatBufferE   ", RequestEncodeReservedBuffer(128, true), s.URL, o)
 	benchmarkRequest(b, "EncodePipe           ", RequestEncodePipe(false), s.URL, o)
 	benchmarkRequest(b, "EncodePipeE          ", RequestEncodePipe(true), s.URL, o)
+	benchmarkRequest(b, "EncodeBPipe          ", RequestEncodeBPipe, s.URL, o)
+
 }
 
 func BenchmarkNested(b *testing.B) {
@@ -192,4 +197,6 @@ func BenchmarkNested(b *testing.B) {
 	benchmarkRequest(b, "EncodeCheatBufferE   ", RequestEncodeReservedBuffer(256, true), s.URL, o)
 	benchmarkRequest(b, "EncodePipe           ", RequestEncodePipe(false), s.URL, o)
 	benchmarkRequest(b, "EncodePipeE          ", RequestEncodePipe(true), s.URL, o)
+	benchmarkRequest(b, "EncodeBPipe          ", RequestEncodeBPipe, s.URL, o)
+
 }

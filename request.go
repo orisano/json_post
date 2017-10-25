@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"io"
@@ -128,5 +129,24 @@ func RequestEncodePipe(escape bool) func(rawurl string, data interface{}) error 
 		defer resp.Body.Close()
 		return nil
 	}
+
+}
+
+func RequestEncodeBPipe(rawurl string, data interface{}) error {
+	pr, pw := io.Pipe()
+	go func() {
+		enc := json.NewEncoder(bufio.NewWriter(pw))
+		pw.CloseWithError(enc.Encode(data))
+	}()
+	req, err := http.NewRequest(http.MethodPost, rawurl, bufio.NewReader(pr))
+	if err != nil {
+		return err
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	return nil
 
 }
