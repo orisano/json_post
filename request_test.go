@@ -1,8 +1,9 @@
 package main
 
 import (
+	"context"
+	"net"
 	"net/http"
-	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
@@ -61,8 +62,12 @@ func benchmarkRequest(b *testing.B, name string, fn func(string, interface{}) er
 }
 
 func BenchmarkSmall(b *testing.B) {
-	s := httptest.NewServer(&yesman{})
-	defer s.Close()
+	http.DefaultClient.Transport = &http.Transport{
+		DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+			return net.Dial("unix", "yesman/yesman.sock")
+		},
+	}
+	s := struct{ URL string }{"http://unix"}
 	o := smallObject
 	benchmarkRequest(b, "MarshalE              ", RequestMarshal, s.URL, o)
 	benchmarkRequest(b, "EncodeDefaultBuffer   ", RequestEncodeDefaultBuffer(false), s.URL, o)
@@ -80,8 +85,12 @@ func BenchmarkSmall(b *testing.B) {
 }
 
 func BenchmarkMiddle(b *testing.B) {
-	s := httptest.NewServer(&yesman{})
-	defer s.Close()
+	http.DefaultClient.Transport = &http.Transport{
+		DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+			return net.Dial("unix", "yesman/yesman.sock")
+		},
+	}
+	s := struct{ URL string }{"http://unix"}
 	o := middleObject
 	benchmarkRequest(b, "MarshalE             ", RequestMarshal, s.URL, o)
 	benchmarkRequest(b, "EncodeDefaultBuffer  ", RequestEncodeDefaultBuffer(false), s.URL, o)
@@ -99,8 +108,12 @@ func BenchmarkMiddle(b *testing.B) {
 }
 
 func BenchmarkLarge(b *testing.B) {
-	s := httptest.NewServer(&yesman{})
-	defer s.Close()
+	http.DefaultClient.Transport = &http.Transport{
+		DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+			return net.Dial("unix", "yesman/yesman.sock")
+		},
+	}
+	s := struct{ URL string }{"http://unix"}
 	o := largeObject
 	benchmarkRequest(b, "MarshalE              ", RequestMarshal, s.URL, o)
 	benchmarkRequest(b, "EncodeDefaultBuffer   ", RequestEncodeDefaultBuffer(false), s.URL, o)
@@ -118,8 +131,12 @@ func BenchmarkLarge(b *testing.B) {
 }
 
 func BenchmarkSimple(b *testing.B) {
-	s := httptest.NewServer(&yesman{})
-	defer s.Close()
+	http.DefaultClient.Transport = &http.Transport{
+		DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+			return net.Dial("unix", "yesman/yesman.sock")
+		},
+	}
+	s := struct{ URL string }{"http://unix"}
 	o := simpleStruct{
 		ID:       "test",
 		Password: "password",
@@ -143,8 +160,12 @@ func BenchmarkSimple(b *testing.B) {
 }
 
 func BenchmarkNested(b *testing.B) {
-	s := httptest.NewServer(&yesman{})
-	defer s.Close()
+	http.DefaultClient.Transport = &http.Transport{
+		DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+			return net.Dial("unix", "yesman/yesman.sock")
+		},
+	}
+	s := struct{ URL string }{"http://unix"}
 	o := nestedStruct{
 		Locations: []Location{
 			{1, 2},
