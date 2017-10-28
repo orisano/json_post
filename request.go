@@ -135,8 +135,12 @@ func RequestEncodePipe(escape bool) func(rawurl string, data interface{}) error 
 func RequestEncodeBPipe(rawurl string, data interface{}) error {
 	pr, pw := io.Pipe()
 	go func() {
-		enc := json.NewEncoder(bufio.NewWriter(pw))
-		pw.CloseWithError(enc.Encode(data))
+		bw := bufio.NewWriter(pw)
+		enc := json.NewEncoder(bw)
+		if err := enc.Encode(data); err != nil {
+			pw.CloseWithError(err)
+		}
+		pw.CloseWithError(bw.Flush())
 	}()
 	req, err := http.NewRequest(http.MethodPost, rawurl, bufio.NewReader(pr))
 	if err != nil {
