@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"io"
-	"net/http"
-	"sync"
 	"io/ioutil"
+	"net/http"
+	"net/url"
+	"sync"
 )
 
 func RequestMarshal(rawurl string, data interface{}) error {
@@ -168,4 +170,72 @@ func RequestEncodePipe(escape bool) func(rawurl string, data interface{}) error 
 		return nil
 	}
 
+}
+
+func RequestEncodeBPipe(rawurl string, data interface{}) error {
+	pr, pw := io.Pipe()
+	go func() {
+		bw := bufio.NewWriter(pw)
+		enc := json.NewEncoder(bw)
+		if err := enc.Encode(data); err != nil {
+			pw.CloseWithError(err)
+		}
+		pw.CloseWithError(bw.Flush())
+	}()
+	req, err := http.NewRequest(http.MethodPost, rawurl, bufio.NewReader(pr))
+	if err != nil {
+		return err
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	return nil
+
+}
+
+type SharedBufferClient struct {
+	b   *bytes.Buffer
+	e   *json.Encoder
+	req *http.Request
+}
+
+func (s *SharedBufferClient) RequestEncode(rawurl string, data interface{}) error {
+	s.b.Reset()
+	if err := s.e.Encode(data); err != nil {
+		return err
+	}
+	u, err := url.ParseRequestURI(rawurl)
+	if err != nil {
+		return err
+	}
+	s.req.Method = http.MethodPost
+	s.req.URL = u
+	s.req.Host = u.Host
+	for k, _ := range s.req.Header {
+		s.req.Header.Del(k)
+	}
+	s.req.Close = false
+	resp, err := http.DefaultClient.Do(s.req)
+	if err != nil {
+		return err
+	}
+	resp.Body.Close()
+	return nil
+}
+
+func NewSharedBufferClient() *SharedBufferClient {
+	b := bytes.NewBuffer(make([]byte, 0, 1*1024*1024))
+	return &SharedBufferClient{
+		b: b,
+		e: json.NewEncoder(b),
+		req: &http.Request{
+			Proto:      "HTTP/1.1",
+			ProtoMajor: 1,
+			ProtoMinor: 1,
+			Header:     make(http.Header),
+			Body:       ioutil.NopCloser(b),
+		},
+	}
 }
