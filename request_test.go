@@ -9,23 +9,17 @@ import (
 	"time"
 )
 
-type yesman struct{}
-
-func (*yesman) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-}
-
-var smallObject map[string]interface{} = map[string]interface{}{
+var smallObject = map[string]interface{}{
 	"description": "Benchmark Sample Request",
 	"author":      "@orisano",
 	"created_at":  "2017-10-25 01:07:20",
 }
 
-var middleObject map[string]interface{} = map[string]interface{}{
+var middleObject = map[string]interface{}{
 	"text": strings.Repeat("1", 30*1024),
 }
 
-var largeObject map[string]interface{} = map[string]interface{}{
+var largeObject = map[string]interface{}{
 	"text": strings.Repeat("1", 30*1024*1024),
 }
 
@@ -82,6 +76,8 @@ func BenchmarkSmall(b *testing.B) {
 	benchmarkRequest(b, "EncodeCheatBufferE    ", RequestEncodeReservedBuffer(128, true), s.URL, o)
 	benchmarkRequest(b, "EncodePipe            ", RequestEncodePipe(false), s.URL, o)
 	benchmarkRequest(b, "EncodePipeE           ", RequestEncodePipe(true), s.URL, o)
+	benchmarkRequest(b, "EncodeBufferPool      ", RequestEncodeBufferPool(false), s.URL, o)
+	benchmarkRequest(b, "EncodeBufferPoolE     ", RequestEncodeBufferPool(true), s.URL, o)
 }
 
 func BenchmarkMiddle(b *testing.B) {
@@ -105,6 +101,8 @@ func BenchmarkMiddle(b *testing.B) {
 	benchmarkRequest(b, "EncodeCheatBufferE   ", RequestEncodeReservedBuffer(32*1024, true), s.URL, o)
 	benchmarkRequest(b, "EncodePipe           ", RequestEncodePipe(false), s.URL, o)
 	benchmarkRequest(b, "EncodePipeE          ", RequestEncodePipe(true), s.URL, o)
+	benchmarkRequest(b, "EncodeBufferPool     ", RequestEncodeBufferPool(false), s.URL, o)
+	benchmarkRequest(b, "EncodeBufferPoolE    ", RequestEncodeBufferPool(true), s.URL, o)
 }
 
 func BenchmarkLarge(b *testing.B) {
@@ -128,6 +126,8 @@ func BenchmarkLarge(b *testing.B) {
 	benchmarkRequest(b, "EncodeCheatBufferE    ", RequestEncodeReservedBuffer(31*1024*1024, true), s.URL, o)
 	benchmarkRequest(b, "EncodePipe            ", RequestEncodePipe(false), s.URL, o)
 	benchmarkRequest(b, "EncodePipeE           ", RequestEncodePipe(true), s.URL, o)
+	benchmarkRequest(b, "EncodeBufferPool      ", RequestEncodeBufferPool(false), s.URL, o)
+	benchmarkRequest(b, "EncodeBufferPoolE     ", RequestEncodeBufferPool(true), s.URL, o)
 }
 
 func BenchmarkSimple(b *testing.B) {
@@ -157,6 +157,8 @@ func BenchmarkSimple(b *testing.B) {
 	benchmarkRequest(b, "EncodeCheatBufferE   ", RequestEncodeReservedBuffer(128, true), s.URL, o)
 	benchmarkRequest(b, "EncodePipe           ", RequestEncodePipe(false), s.URL, o)
 	benchmarkRequest(b, "EncodePipeE          ", RequestEncodePipe(true), s.URL, o)
+	benchmarkRequest(b, "EncodeBufferPool     ", RequestEncodeBufferPool(false), s.URL, o)
+	benchmarkRequest(b, "EncodeBufferPoolE    ", RequestEncodeBufferPool(true), s.URL, o)
 }
 
 func BenchmarkNested(b *testing.B) {
@@ -192,4 +194,6 @@ func BenchmarkNested(b *testing.B) {
 	benchmarkRequest(b, "EncodeCheatBufferE   ", RequestEncodeReservedBuffer(256, true), s.URL, o)
 	benchmarkRequest(b, "EncodePipe           ", RequestEncodePipe(false), s.URL, o)
 	benchmarkRequest(b, "EncodePipeE          ", RequestEncodePipe(true), s.URL, o)
+	benchmarkRequest(b, "EncodeBufferPool     ", RequestEncodeBufferPool(false), s.URL, o)
+	benchmarkRequest(b, "EncodeBufferPoolE    ", RequestEncodeBufferPool(true), s.URL, o)
 }
