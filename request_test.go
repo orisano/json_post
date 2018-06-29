@@ -80,6 +80,7 @@ func BenchmarkSmall(b *testing.B) {
 	benchmarkRequest(b, "EncodeBufferPoolE     ", RequestEncodeBufferPool(true), s.URL, o)
 	benchmarkRequest(b, "EncodeBPipe           ", RequestEncodeBPipe, s.URL, o)
 	benchmarkRequest(b, "SharedBufferEncode    ", NewSharedBufferClient().RequestEncode, s.URL, o)
+	benchmarkRequest(b, "FastMarshal           ", RequestFastMarshal, s.URL, o)
 }
 
 func BenchmarkMiddle(b *testing.B) {
@@ -107,6 +108,7 @@ func BenchmarkMiddle(b *testing.B) {
 	benchmarkRequest(b, "EncodeBufferPoolE    ", RequestEncodeBufferPool(true), s.URL, o)
 	benchmarkRequest(b, "EncodeBPipe          ", RequestEncodeBPipe, s.URL, o)
 	benchmarkRequest(b, "SharedBufferEncode   ", NewSharedBufferClient().RequestEncode, s.URL, o)
+	benchmarkRequest(b, "FastMarshal          ", RequestFastMarshal, s.URL, o)
 }
 
 func BenchmarkLarge(b *testing.B) {
@@ -134,6 +136,7 @@ func BenchmarkLarge(b *testing.B) {
 	benchmarkRequest(b, "EncodeBufferPoolE     ", RequestEncodeBufferPool(true), s.URL, o)
 	benchmarkRequest(b, "EncodeBPipe           ", RequestEncodeBPipe, s.URL, o)
 	benchmarkRequest(b, "SharedBufferEncode    ", NewSharedBufferClient().RequestEncode, s.URL, o)
+	benchmarkRequest(b, "FastMarshal           ", RequestFastMarshal, s.URL, o)
 }
 
 func BenchmarkSimple(b *testing.B) {
@@ -167,6 +170,7 @@ func BenchmarkSimple(b *testing.B) {
 	benchmarkRequest(b, "EncodeBufferPoolE    ", RequestEncodeBufferPool(true), s.URL, o)
 	benchmarkRequest(b, "EncodeBPipe          ", RequestEncodeBPipe, s.URL, o)
 	benchmarkRequest(b, "SharedBufferEncode   ", NewSharedBufferClient().RequestEncode, s.URL, o)
+	benchmarkRequest(b, "FastMarshal          ", RequestFastMarshal, s.URL, o)
 }
 
 func BenchmarkNested(b *testing.B) {
@@ -206,4 +210,5 @@ func BenchmarkNested(b *testing.B) {
 	benchmarkRequest(b, "EncodeBufferPoolE    ", RequestEncodeBufferPool(true), s.URL, o)
 	benchmarkRequest(b, "EncodeBPipe          ", RequestEncodeBPipe, s.URL, o)
 	benchmarkRequest(b, "SharedBufferEncode   ", NewSharedBufferClient().RequestEncode, s.URL, o)
+	benchmarkRequest(b, "FastMarshal          ", RequestFastMarshal, s.URL, o)
 }

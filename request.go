@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"sync"
+	"github.com/json-iterator/go"
 )
 
 func RequestMarshal(rawurl string, data interface{}) error {
@@ -238,4 +239,24 @@ func NewSharedBufferClient() *SharedBufferClient {
 			Body:       ioutil.NopCloser(b),
 		},
 	}
+}
+
+func RequestFastMarshal(rawurl string, data interface{}) error {
+	jsonLib := jsoniter.ConfigCompatibleWithStandardLibrary
+	b, err := jsonLib.Marshal(data)
+	if err != nil {
+		return err
+	}
+	r := bytes.NewReader(b)
+	req, err := http.NewRequest(http.MethodPost, rawurl, r)
+	if err != nil {
+		return err
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	io.Copy(ioutil.Discard, resp.Body)
+	return nil
 }
