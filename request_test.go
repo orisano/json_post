@@ -43,6 +43,7 @@ type nestedStruct struct {
 }
 
 func benchmarkRequest(b *testing.B, name string, fn func(string, interface{}) error, rawurl string, data interface{}) {
+	b.Helper()
 	b.Run(name, func(b *testing.B) {
 		b.ResetTimer()
 		b.ReportAllocs()
