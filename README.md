@@ -1,5 +1,5 @@
 # json_post
-Benchmark of way of json post on golang.
+Benchmark of way of json post on go.
 
 ```
 goos: darwin
