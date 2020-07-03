@@ -98,7 +98,7 @@ BenchmarkNested/FastMarshal__________-4         	   10000	    129807 ns/op	    3
 ```
 
 ## Author
-Nao YONASHIRO(@orisano)
+Nao Yonashiro (@orisano)
 
 ## License
 MIT
